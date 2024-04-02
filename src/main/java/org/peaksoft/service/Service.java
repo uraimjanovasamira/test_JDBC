@@ -1,21 +1,22 @@
 package org.peaksoft.service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface Service<T> {
 
-    void createTable();
+    void createTable() throws SQLException;
 
-    void dropTable();
+    void dropTable() throws SQLException;
 
-    void save(T t);
+    void save(T t) throws SQLException;
 
-    void removeById(long id);
+    void removeById(long id) throws SQLException;
 
-    List<T> getAll();
+    List<T> getAll() throws SQLException;
 
-    void cleanTable();
-    T getById(long id);
+    void cleanTable() throws SQLException;
+    T getById(long id) throws SQLException;
 
 }
 
