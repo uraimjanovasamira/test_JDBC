@@ -5,12 +5,10 @@ import org.peaksoft.model.User;
 import org.peaksoft.service.CarServiceImpl;
 import org.peaksoft.service.UserServiceImpl;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.List;
 
 public class Main {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         // TODO: 27.09.2023   реализуйте алгоритм здесь
         LocalDate localDate = LocalDate.of(2000, 1, 1);
         UserServiceImpl userService = new UserServiceImpl();

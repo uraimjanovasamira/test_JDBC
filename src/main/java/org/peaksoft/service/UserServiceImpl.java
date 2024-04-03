@@ -12,7 +12,7 @@ public class UserServiceImpl implements Service<User> {
     public void createTable() {
         String query =
                 """
-                        CREATE TABLE users(
+                        CREATE TABLE IF NOT EXISTS users(
                         id       SERIAL PRIMARY KEY NOT NULL,
                         name     VARCHAR,
                         lastname VARCHAR,
@@ -29,14 +29,17 @@ public class UserServiceImpl implements Service<User> {
         }
     }
 
+
     public void dropTable() {
-        String query = "DROP TABLE users;";
+
+        String query = "DROP TABLE IF EXISTS users;";
         Connection connection = Util.getConnection();
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
+
         } catch (SQLException e) {
-            System.out.println("Ошибка при удалении таблицы: " + e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -55,24 +58,22 @@ public class UserServiceImpl implements Service<User> {
             preparedStatement.execute();
         } catch (SQLException e) {
             System.out.println("Ошибка при заполнении таблицы: " + e.getMessage());
-
         }
     }
 
-    public void removeById(long id){
+    public void removeById(long id) {
         String query = "DELETE FROM users WHERE id =" + id;
         Connection connection = Util.getConnection();
         try {
             Statement statement = connection.createStatement();
             statement.execute(query);
             statement.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("Ошибка при удалении обьекта по id: " + e.getMessage());
-
         }
     }
 
-    public List<User> getAll(){
+    public List<User> getAll() {
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM users";
 
@@ -94,7 +95,7 @@ public class UserServiceImpl implements Service<User> {
         return users;
     }
 
-    public void cleanTable(){
+    public void cleanTable() {
         String query = "DELETE FROM users;";
         Connection connection = Util.getConnection();
         try {
@@ -102,7 +103,7 @@ public class UserServiceImpl implements Service<User> {
             statement.execute(query);
             statement.close();
             connection.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("Ошибка при очистке таблицы: " + e.getMessage());
 
         }

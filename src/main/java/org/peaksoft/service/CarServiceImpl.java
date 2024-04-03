@@ -1,17 +1,16 @@
 package org.peaksoft.service;
 
-
 import org.peaksoft.model.Car;
 import org.peaksoft.util.Util;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CarServiceImpl implements Service<Car> {
+
     public void createTable() {
         String query = """
-                CREATE TABLE cars(
+                CREATE TABLE IF NOT EXISTS cars(
                     id              SERIAL PRIMARY KEY,
                     model           VARCHAR NOT NULL,
                     year_of_Release DATE,
@@ -22,8 +21,7 @@ public class CarServiceImpl implements Service<Car> {
             Statement statement = connection.createStatement();
             statement.execute(query);
         } catch (SQLException e) {
-            System.out.println("Ошибка при удалении таблицы: " + e.getMessage());
-
+            System.out.println(e.getMessage());
         }
     }
 
@@ -36,11 +34,11 @@ public class CarServiceImpl implements Service<Car> {
             statement.close();
         } catch (SQLException e) {
             System.out.println("Ошибка при удалении таблицы: " + e.getMessage());
-
         }
     }
 
     public void save(Car car) {
+
         String query = "INSERT INTO cars(model,year_of_Release,color)" +
                 "VALUES (?,?,?)";
         Connection connection = Util.getConnection();
@@ -104,9 +102,9 @@ public class CarServiceImpl implements Service<Car> {
     public Car getById(long id) {
         String query = "SELECT * FROM users WHERE id = ?";
         Car car = new Car();
+
         Connection connection = Util.getConnection();
         try {
-
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setLong(1, id);
 
