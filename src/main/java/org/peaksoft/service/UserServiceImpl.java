@@ -54,19 +54,25 @@ public class UserServiceImpl implements Service<User> {
             preparedStatement.setLong(4, user.getCard_id());
             preparedStatement.execute();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("Ошибка при заполнении таблицы: " + e.getMessage());
+
         }
     }
 
-    public void removeById(long id) throws SQLException {
+    public void removeById(long id){
         String query = "DELETE FROM users WHERE id =" + id;
         Connection connection = Util.getConnection();
-        Statement statement = connection.createStatement();
-        statement.execute(query);
-        statement.close();
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+            statement.close();
+        }catch (SQLException e){
+            System.out.println("Ошибка при удалении обьекта по id: " + e.getMessage());
+
+        }
     }
 
-    public List<User> getAll() throws SQLException {
+    public List<User> getAll(){
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM users";
 
@@ -83,18 +89,23 @@ public class UserServiceImpl implements Service<User> {
                 users.add(user);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
+            System.out.println("Ошибка при получении таблицы: " + e.getMessage());
         }
         return users;
     }
 
-    public void cleanTable() throws SQLException {
+    public void cleanTable(){
         String query = "DELETE FROM users;";
         Connection connection = Util.getConnection();
-        Statement statement = connection.createStatement();
-        statement.execute(query);
-        statement.close();
-        connection.close();
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+            statement.close();
+            connection.close();
+        }catch (SQLException e){
+            System.out.println("Ошибка при очистке таблицы: " + e.getMessage());
+
+        }
     }
 
     public User getById(long id) {
@@ -114,7 +125,8 @@ public class UserServiceImpl implements Service<User> {
                 user.setCard_id(resultSet.getLong("card_id"));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
+            System.out.println("Ошибка при получении обьекта по id: " + e.getMessage());
+
         }
         return user;
 

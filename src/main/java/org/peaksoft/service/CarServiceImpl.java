@@ -27,73 +27,99 @@ public class CarServiceImpl implements Service<Car> {
         }
     }
 
-    public void dropTable() throws SQLException {
+    public void dropTable() {
         String query = "DROP TABLE cars;";
         Connection connection = Util.getConnection();
-        Statement statement = connection.createStatement();
-        statement.execute(query);
-        statement.close();
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+            statement.close();
+        } catch (SQLException e) {
+            System.out.println("Ошибка при удалении таблицы: " + e.getMessage());
+
+        }
     }
 
-    public void save(Car car) throws SQLException {
+    public void save(Car car) {
         String query = "INSERT INTO cars(model,year_of_Release,color)" +
                 "VALUES (?,?,?)";
         Connection connection = Util.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        preparedStatement.setString(1, car.getModel());
-        preparedStatement.setDate(2, Date.valueOf(car.getYearOfRelease()));
-        preparedStatement.setString(3, car.getColor());
-        preparedStatement.execute();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, car.getModel());
+            preparedStatement.setDate(2, Date.valueOf(car.getYearOfRelease()));
+            preparedStatement.setString(3, car.getColor());
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            System.out.println("Ошибка при заполнении таблицы: " + e.getMessage());
+        }
     }
 
-    public void removeById(long id) throws SQLException {
+    public void removeById(long id) {
         String query = "DELETE FROM cars WHERE id=" + id;
         Connection connection = Util.getConnection();
-        Statement statement = connection.createStatement();
-        statement.execute(query);
-        statement.close();
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+            statement.close();
+        } catch (SQLException e) {
+            System.out.println("Ошибка при удалении обьекта по id: " + e.getMessage());
+        }
     }
 
-    public List<Car> getAll() throws SQLException {
+    public List<Car> getAll() {
         String query = "SELECT * FROM cars;";
         List<Car> list = new ArrayList<>();
 
         Connection connection = Util.getConnection();
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(query);
-        while (resultSet.next()) {
-            Car car = new Car();
-            car.setId(resultSet.getLong("id"));
-            car.setModel(resultSet.getString("model"));
-            car.setColor(resultSet.getString("color"));
-            car.setYearOfRelease(resultSet.getDate("year_of_Release").toLocalDate());
-            list.add(car);
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                Car car = new Car();
+                car.setId(resultSet.getLong("id"));
+                car.setModel(resultSet.getString("model"));
+                car.setColor(resultSet.getString("color"));
+                car.setYearOfRelease(resultSet.getDate("year_of_Release").toLocalDate());
+                list.add(car);
+            }
+        } catch (SQLException e) {
+            System.out.println("Ошибка: " + e.getMessage());
         }
         return list;
     }
 
-    public void cleanTable() throws SQLException {
+    public void cleanTable() {
         String query = "DELETE FROM cars;";
         Connection connection = Util.getConnection();
-        Statement statement = connection.createStatement();
-        statement.execute(query);
-        statement.close();
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+            statement.close();
+        } catch (SQLException e) {
+            System.out.println("Ошибка при очистке таблицы: " + e.getMessage());
+        }
     }
 
-    public Car getById(long id) throws SQLException {
+    public Car getById(long id) {
         String query = "SELECT * FROM users WHERE id = ?";
         Car car = new Car();
         Connection connection = Util.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        preparedStatement.setLong(1, id);
+        try {
 
-        ResultSet resultSet = preparedStatement.executeQuery();
-        while (resultSet.next()) {
-            car = new Car();
-            car.setId(resultSet.getLong("id"));
-            car.setModel(resultSet.getString("model"));
-            car.setColor(resultSet.getString("color"));
-            car.setYearOfRelease(resultSet.getDate("year_of_Release").toLocalDate());
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                car = new Car();
+                car.setId(resultSet.getLong("id"));
+                car.setModel(resultSet.getString("model"));
+                car.setColor(resultSet.getString("color"));
+                car.setYearOfRelease(resultSet.getDate("year_of_Release").toLocalDate());
+            }
+        } catch (SQLException e) {
+            System.out.println("Ошибка при получении обьекта по id: " + e.getMessage());
         }
         return car;
     }
